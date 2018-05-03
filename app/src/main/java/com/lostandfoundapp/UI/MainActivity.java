@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference myRef = database.getReference("message");
     TextView textView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,11 +25,13 @@ public class MainActivity extends AppCompatActivity {
       getData();
         textView = (TextView) findViewById(R.id.textItems);
 
+
+
     }
     public void sendMessage(){
 
 
-        myRef.setValue("Hello, you stupid database!");
+        myRef.setValue("Hello, DATABASE!");
     }
 
     public void getData(){
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
                 // whenever data at this location is updated.
                 String value = dataSnapshot.getValue(String.class);
                 textView.setText(value);
+
 
 
             }
