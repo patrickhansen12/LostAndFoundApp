@@ -5,18 +5,33 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Brugernavn" />
 
     <EditText
         android:id="@+id/brugernavn"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Brugernavn" />
+        android:text="Kodeord" />
 
     <EditText
         android:id="@+id/kodeord"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Kodeord"/>
+        android:inputType="textPassword"/>
+
+    <TextView
+        android:id="@+id/failText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="@color/warningText"/>
 
     <LinearLayout
         android:layout_width="match_parent"
