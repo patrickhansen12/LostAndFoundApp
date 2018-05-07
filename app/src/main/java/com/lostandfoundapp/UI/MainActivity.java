@@ -50,6 +50,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        SMSButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                {
+                    Intent x = new Intent();
+                    x.setClass(MainActivity.this, LoginActivity.class);
+                    startActivity(x);
+                }
+            }
+        });
     }
     public void sendMessage(){
 
