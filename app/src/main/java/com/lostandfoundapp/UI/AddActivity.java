@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -69,6 +70,11 @@ private FirebaseStorage storage = FirebaseStorage.getInstance();
         Dropdown = findViewById(R.id.dropdown);
 mProgress = new ProgressDialog(this);
         downloadedUrl = (TextView) findViewById(R.id.download_url);
+
+        final String[] catagories = new String[]{"Alt", "Tøj", "Sko", "Smykker", "Elektroni", "Diverse"};
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, catagories);
+        Dropdown.setAdapter(adapter);
+
         PictureButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 openPictureActivity();
