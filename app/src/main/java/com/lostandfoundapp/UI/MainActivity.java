@@ -1,11 +1,13 @@
 package com.lostandfoundapp.UI;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -22,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference myRef = database.getReference("message");
 
     TextView textItems;
-    Button PhoneButton, SMSButton, LoginButton, GetImage;
+    Button LoginButton, GetImage;
+    ImageButton PhoneButton, SMSButton;
     EditText Searchbar;
     Spinner DropDown;
 
@@ -30,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-      sendMessage();
-      getData();
+        sendMessage();
+        getData();
         textItems = findViewById(R.id.textItems);
         PhoneButton = findViewById(R.id.PhoneButton);
         SMSButton = findViewById(R.id.SMSButton);
@@ -42,25 +45,31 @@ public class MainActivity extends AppCompatActivity {
 
         LoginButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                {
                     Intent x = new Intent();
                     x.setClass(MainActivity.this, AddActivity.class);
                     startActivity(x);
                 }
-            }
-        });
+            });
 
 
         SMSButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+            public void onClick(View v)
                 {
-                    Intent x = new Intent();
-                    x.setClass(MainActivity.this, LoginActivity.class);
-                    startActivity(x);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:"));
+                    intent.putExtra("sms_body", "message");
+                    startActivity(intent);
                 }
+            });
+
+        PhoneButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:"));
+                startActivity(Intent.createChooser(intent, ""));
             }
         });
     }
+
     public void sendMessage(){
 
 
