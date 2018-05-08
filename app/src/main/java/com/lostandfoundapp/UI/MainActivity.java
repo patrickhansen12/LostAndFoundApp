@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -43,10 +42,6 @@ public class MainActivity extends AppCompatActivity {
         GetImage = findViewById(R.id.getImage);
         Searchbar = findViewById(R.id.Searchbar);
         DropDown = findViewById(R.id.dropdown);
-
-        final String[] catagories = new String[]{"Alt", "Tøj", "Sko", "Smykker", "Elektroni", "Diverse"};
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, catagories);
-        DropDown.setAdapter(adapter);
 
         LoginButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
