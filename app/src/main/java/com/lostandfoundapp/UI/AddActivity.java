@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -44,6 +45,10 @@ public class AddActivity extends AppCompatActivity {
         Picture = findViewById(R.id.picture);
         NameText = findViewById(R.id.nameText);
         Dropdown = findViewById(R.id.dropdown);
+
+        final String[] catagories = new String[]{"Alt", "Tøj", "Sko", "Smykker", "Elektroni", "Diverse"};
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, catagories);
+        Dropdown.setAdapter(adapter);
 
         PictureButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
