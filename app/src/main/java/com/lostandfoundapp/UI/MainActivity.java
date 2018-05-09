@@ -60,16 +60,18 @@ public class MainActivity extends AppCompatActivity {
         SMSButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
                 {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:"));
-                    intent.putExtra("sms_body", "message");
-                    startActivity(intent);
+                    Uri uri = Uri.parse("smsto:31704479");
+                    Intent it = new Intent(Intent.ACTION_SENDTO, uri);
+                    it.putExtra("sms_body", "The SMS text");
+                    startActivity(it);
                 }
             });
 
         PhoneButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
                 Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:"));
+                intent.setData(Uri.parse("tel:" + 31704479));
                 startActivity(Intent.createChooser(intent, ""));
             }
         });
