@@ -11,6 +11,7 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -21,16 +22,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.lostandfoundapp.BLL.PictureAdapter;
 import com.lostandfoundapp.R;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.UUID;
 
 /**
@@ -39,7 +42,9 @@ import java.util.UUID;
 
 public class AddActivity extends AppCompatActivity {
     private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
-private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private Uri filePath;
+
+    private final int PICK_IMAGE_REQUEST = 71;
     PictureAdapter pictureAdapter;
 
     Button PictureButton, SaveButton, BackButton;
@@ -48,7 +53,8 @@ private FirebaseStorage storage = FirebaseStorage.getInstance();
     EditText NameText;
     Spinner Dropdown;
     Bitmap itemPicture;
- private StorageReference mStorage;
+    FirebaseStorage storage;
+    StorageReference storageReference;
  private ProgressDialog mProgress;
  TextView overlayText;
  private TextView downloadedUrl;
@@ -57,7 +63,7 @@ private FirebaseStorage storage = FirebaseStorage.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mStorage = FirebaseStorage.getInstance().getReference();
+
         super.onCreate(savedInstanceState);
         imageContainer = findViewById(R.id.image_container);
         overlayText = (TextView) findViewById(R.id.overlayText);
@@ -70,7 +76,10 @@ private FirebaseStorage storage = FirebaseStorage.getInstance();
         Dropdown = findViewById(R.id.dropdown);
 mProgress = new ProgressDialog(this);
         downloadedUrl = (TextView) findViewById(R.id.download_url);
+//Firebase
 
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
         final String[] catagories = new String[]{"Alt", "Tøj", "Sko", "Smykker", "Elektroni", "Diverse"};
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, catagories);
         Dropdown.setAdapter(adapter);
@@ -81,9 +90,78 @@ openPictureActivity();
 
             }
         });
+        SaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImage();
+            }
+        });
+
+        BackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadImage();
+            }
+        });
 
     }
+    private void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+    private void uploadImage() {
 
+        if(filePath != null)
+        {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+
+            StorageReference ref = storageReference.child("images/"+ UUID.randomUUID().toString());
+            ref.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+                            Toast.makeText(AddActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(AddActivity.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                                    .getTotalByteCount());
+                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                        }
+                    });
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null )
+        {
+            filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                Picture.setImageBitmap(bitmap);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public void openPictureActivity() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -91,40 +169,16 @@ openPictureActivity();
 
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-            switch (resultCode) {
-                case RESULT_OK:
-                    setTakenPicture(data);
-                    break;
-            }
-        }
-           // mProgress.setMessage("Uploading Image ....");
-            //mProgress.show();
-
-            Picture.setDrawingCacheEnabled(true);
-            Picture.buildDrawingCache();
-            Bitmap bitmap = Picture.getDrawingCache();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            Picture.setDrawingCacheEnabled(false);
-            byte[] data1 = baos.toByteArray();
-            String path = "items/" + UUID.randomUUID() + ".png";
-            StorageReference itemsRef = storage.getReference(path);
-
-            StorageMetadata metadata = new StorageMetadata.Builder().setCustomMetadata("text", NameText.getText().toString()).build();
-            UploadTask uploadTask = itemsRef.putBytes(data1, metadata);
-            uploadTask.addOnSuccessListener(AddActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Uri url = taskSnapshot.getDownloadUrl();
-                    downloadedUrl.setText(url.toString());
-                    downloadedUrl.setVisibility(View.VISIBLE);
-                }
-
-    });
-            super.onActivityResult(requestCode, resultCode, data);
-}
+    //public void onActivityResult(int requestCode, int resultCode, Intent data) {
+      //  if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+          //  switch (resultCode) {
+            //    case RESULT_OK:
+               //     setTakenPicture(data);
+                //    break;
+           // }
+        //}
+         //   super.onActivityResult(requestCode, resultCode, data);
+//}
 
     public void setTakenPicture(Intent data) {
         Bitmap picture = (Bitmap) data.getExtras().get("data");
