@@ -32,24 +32,45 @@
         android:layout_gravity="center_horizontal" >
     </Spinner>
 
+    <View
+        android:id="@+id/image_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/overlayText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/download_url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="TextView" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="visible">
 
         <Button
             android:id="@+id/backButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tilbage"
-            android:layout_gravity="bottom" />
+            android:layout_gravity="bottom"
+            android:text="Tilbage" />
 
         <Button
             android:id="@+id/saveButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Gem"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="200dp" />
+            android:layout_marginLeft="200dp"
+            android:text="Gem" />
 
     </LinearLayout>
 

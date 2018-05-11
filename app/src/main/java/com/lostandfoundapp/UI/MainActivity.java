@@ -1,11 +1,14 @@
 package com.lostandfoundapp.UI;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -22,7 +25,8 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference myRef = database.getReference("message");
 
     TextView textItems;
-    Button PhoneButton, SMSButton, LoginButton, GetImage;
+    Button LoginButton, GetImage;
+    ImageButton PhoneButton, SMSButton;
     EditText Searchbar;
     Spinner DropDown;
 
@@ -30,8 +34,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-      sendMessage();
-      getData();
+        sendMessage();
+        getData();
         textItems = findViewById(R.id.textItems);
         PhoneButton = findViewById(R.id.PhoneButton);
         SMSButton = findViewById(R.id.SMSButton);
@@ -40,27 +44,39 @@ public class MainActivity extends AppCompatActivity {
         Searchbar = findViewById(R.id.Searchbar);
         DropDown = findViewById(R.id.dropdown);
 
+        final String[] catagories = new String[]{"Alt", "Tøj", "Sko", "Smykker", "Elektroni", "Diverse"};
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, catagories);
+        DropDown.setAdapter(adapter);
+
         LoginButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                {
                     Intent x = new Intent();
                     x.setClass(MainActivity.this, AddActivity.class);
                     startActivity(x);
                 }
-            }
-        });
+            });
 
 
         SMSButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+            public void onClick(View v)
                 {
-                    Intent x = new Intent();
-                    x.setClass(MainActivity.this, LoginActivity.class);
-                    startActivity(x);
+                    Uri uri = Uri.parse("smsto:31704479");
+                    Intent it = new Intent(Intent.ACTION_SENDTO, uri);
+                    it.putExtra("sms_body", "The SMS text");
+                    startActivity(it);
                 }
+            });
+
+        PhoneButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + 31704479));
+                startActivity(Intent.createChooser(intent, ""));
             }
         });
     }
+
     public void sendMessage(){
 
 
