@@ -6,13 +6,6 @@
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/backButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:text="Tilbage" />
-
-    <Button
         android:id="@+id/pictureButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,6 +31,13 @@
         android:spinnerMode="dropdown"
         android:layout_gravity="center_horizontal" >
     </Spinner>
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:text="Tilbage" />
 
     <Button
         android:id="@+id/saveButton"
