@@ -4,15 +4,20 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -33,7 +38,10 @@ import com.lostandfoundapp.BLL.PictureAdapter;
 import com.lostandfoundapp.R;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -43,7 +51,7 @@ import java.util.UUID;
 public class AddActivity extends AppCompatActivity {
     private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
     private Uri filePath;
-
+    File mFile;
     private final int PICK_IMAGE_REQUEST = 71;
     PictureAdapter pictureAdapter;
 
@@ -58,11 +66,11 @@ public class AddActivity extends AppCompatActivity {
  private ProgressDialog mProgress;
  TextView overlayText;
  private TextView downloadedUrl;
-
+ private final static String LOGTAG = "Camera01";
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         imageContainer = findViewById(R.id.image_container);
@@ -76,7 +84,6 @@ public class AddActivity extends AppCompatActivity {
         Dropdown = findViewById(R.id.dropdown);
 mProgress = new ProgressDialog(this);
         downloadedUrl = (TextView) findViewById(R.id.download_url);
-//Firebase
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -86,8 +93,7 @@ mProgress = new ProgressDialog(this);
 
         PictureButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-openPictureActivity();
-
+            openPictureActivity();
             }
         });
         SaveButton.setOnClickListener(new View.OnClickListener() {
@@ -146,21 +152,28 @@ openPictureActivity();
         }
     }
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                && data != null && data.getData() != null )
-        {
-            filePath = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                Picture.setImageBitmap(bitmap);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                showPictureTaken(mFile);
+              Bitmap mFile = (Bitmap) data.getExtras().get("data");
+                String test = "1";
+                chooseImage();
+
+                    filePath = data.getData();
+
+
+            } else
+            if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "Canceled...", Toast.LENGTH_LONG).show();
+                return;
+
+            } else
+                Toast.makeText(this, "Picture NOT taken - unknown error...", Toast.LENGTH_LONG).show();
         }
+        super.onActivityResult(requestCode, resultCode, data);
+
     }
 
     public void openPictureActivity() {
@@ -169,42 +182,77 @@ openPictureActivity();
 
     }
 
-    //public void onActivityResult(int requestCode, int resultCode, Intent data) {
-      //  if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-          //  switch (resultCode) {
-            //    case RESULT_OK:
-               //     setTakenPicture(data);
-                //    break;
-           // }
-        //}
-         //   super.onActivityResult(requestCode, resultCode, data);
-//}
+    private void onClickTakePics()
+    {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        mFile = getOutputMediaFile(); // create a file to save the image
+        if (mFile == null)
+        {
+            Toast.makeText(this, "Could not create file...", Toast.LENGTH_LONG).show();
+            return;
+        }
+        // create Intent to take a picture
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mFile));
 
-    public void setTakenPicture(Intent data) {
-        Bitmap picture = (Bitmap) data.getExtras().get("data");
-        itemPicture = roundCropBitmap(picture);
-        Picture.setImageBitmap(itemPicture);
+
+
+        // start the image capture Intent
+        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+
     }
 
-    public Bitmap roundCropBitmap(Bitmap bitmap) {
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
 
-        final int color = 0xff424242;
-        final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+    /** Create a File for saving an image */
+    private File getOutputMediaFile(){
 
-        paint.setAntiAlias(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
-        canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2,
-                bitmap.getWidth() / 2, paint);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, rect, rect, paint);
-        return output;
+
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), "LostAndFoundPictures12");
+
+        // Create the storage directory if it does not exist
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                return null;
+            }
+        }
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String postfix = "jpg";
+        String prefix = "IMG";
+
+        File mediaFile = new File(mediaStorageDir.getPath() +
+                File.separator + prefix +
+                "_"+ timeStamp + "." + postfix);
+
+        return mediaFile;
     }
+
+
+
+    private void showPictureTaken(File f) {
+
+        //Picture.setImageURI(Uri.fromFile(f));
+        //Picture.setBackgroundColor(Color.RED);
+        //Picture.setRotation(90);
+        scaleImage();
     }
+
+
+    private void scaleImage()
+    {
+        final Display display = getWindowManager().getDefaultDisplay();
+        Point p = new Point();
+        display.getSize(p);
+        final float screenWidth = p.x/2;
+        final float screenHeight = p.y/2; //m_takeBtn.getHeight());
+        //Picture.setMaxHeight((int)screenHeight);
+        //Picture.setMaxWidth((int)screenWidth);
+    }
+
+
+}
 
 
 
