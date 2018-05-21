@@ -4,15 +4,20 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -29,11 +34,13 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.lostandfoundapp.BLL.PictureAdapter;
 import com.lostandfoundapp.R;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -43,10 +50,9 @@ import java.util.UUID;
 public class AddActivity extends AppCompatActivity {
     private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
     private Uri filePath;
-
+    File    mFile;
     private final int PICK_IMAGE_REQUEST = 71;
-    PictureAdapter pictureAdapter;
-
+    TextView mFilename;
     Button PictureButton, SaveButton, BackButton;
    View imageContainer;
     ImageView Picture;
@@ -63,7 +69,7 @@ public class AddActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        mFilename = (TextView) findViewById(R.id.txtFileName);
         super.onCreate(savedInstanceState);
         imageContainer = findViewById(R.id.image_container);
         overlayText = (TextView) findViewById(R.id.overlayText);
@@ -74,8 +80,8 @@ public class AddActivity extends AppCompatActivity {
         Picture = findViewById(R.id.picture);
         NameText = findViewById(R.id.nameText);
         Dropdown = findViewById(R.id.dropdown);
+
 mProgress = new ProgressDialog(this);
-        downloadedUrl = (TextView) findViewById(R.id.download_url);
 //Firebase
 
         storage = FirebaseStorage.getInstance();
@@ -84,10 +90,10 @@ mProgress = new ProgressDialog(this);
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, catagories);
         Dropdown.setAdapter(adapter);
 
-        PictureButton.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.pictureButton).setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
-openPictureActivity();
-
+                openPictureActivity();
             }
         });
         SaveButton.setOnClickListener(new View.OnClickListener() {
@@ -145,28 +151,24 @@ openPictureActivity();
                     });
         }
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                && data != null && data.getData() != null )
-        {
-            filePath = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                Picture.setImageBitmap(bitmap);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
+
 
     public void openPictureActivity() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 
+
+
+        mFile = getOutputMediaFile(); // create a file to save the image
+        if (mFile == null)
+        {
+            Toast.makeText(this, "Could not create file...", Toast.LENGTH_LONG).show();
+            return;
+        }
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+
+        // start the image capture Intent
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mFile));
+        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
 
     //public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -179,6 +181,29 @@ openPictureActivity();
         //}
          //   super.onActivityResult(requestCode, resultCode, data);
 //}
+
+    private void showPictureTaken(File f) {
+
+        Picture.setImageURI(Uri.fromFile(f));
+        Picture.setBackgroundColor(Color.RED);
+        Picture.setRotation(90);
+
+        //mFilename.setText(f.getAbsolutePath());
+        scaleImage();
+    }
+
+
+
+    private void scaleImage()
+    {
+        final Display display = getWindowManager().getDefaultDisplay();
+        Point p = new Point();
+        display.getSize(p);
+        final float screenWidth = p.x/2;
+        final float screenHeight = p.y/2; //m_takeBtn.getHeight());
+        Picture.setMaxHeight((int)screenHeight);
+        Picture.setMaxWidth((int)screenWidth);
+    }
 
     public void setTakenPicture(Intent data) {
         Bitmap picture = (Bitmap) data.getExtras().get("data");
@@ -203,6 +228,40 @@ openPictureActivity();
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(bitmap, rect, rect, paint);
         return output;
+    }
+    /** Create a File for saving an image */
+    private File getOutputMediaFile(){
+
+
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), "HelloWorld");
+
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String postfix = "jpg";
+        String prefix = "IMG";
+
+        File mediaFile = new File(mediaStorageDir.getPath() +
+                File.separator + prefix +
+                "_"+ timeStamp + "." + postfix);
+
+        return mediaFile;
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                showPictureTaken(mFile);
+
+            } else
+            if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "Canceled...", Toast.LENGTH_LONG).show();
+                return;
+
+            } else
+                Toast.makeText(this, "Picture NOT taken - unknown error...", Toast.LENGTH_LONG).show();
+        }
     }
     }
 
