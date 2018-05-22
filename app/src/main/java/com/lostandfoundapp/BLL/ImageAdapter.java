@@ -16,7 +16,6 @@ import com.lostandfoundapp.R;
 import com.squareup.picasso.Picasso;
 import java.util.List;
 
-
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
     private Context mContext;
     private List<Upload> mUploads;

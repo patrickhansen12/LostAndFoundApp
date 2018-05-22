@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "914962499822-7n3d02031kc84eq4q4ruq3js8u5eubc5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lostandfoundapp",
+            "certificate_hash": "7bff619ea776f7c30f875043e534d19bb1a992d6"
+          }
+        },
+        {
           "client_id": "914962499822-0dktp13mc9o5spbuf3p6j6jnsasfd5vp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
