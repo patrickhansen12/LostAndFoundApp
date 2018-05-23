@@ -37,12 +37,11 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
     private ValueEventListener mDBListener;
 
     private List<Upload> mUploads;
-
+    public String name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_images);
-
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -104,7 +103,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
             case R.id.SMSButton:
                 Uri uri = Uri.parse("smsto:31704479");
                 Intent it = new Intent(Intent.ACTION_SENDTO, uri);
-                it.putExtra("sms_body", "The SMS text");
+                it.putExtra("sms_body", "Hej jeg kontakter skolen anngående " + name + " da jeg mener det er mit" );
                 startActivity(it);
                 break;
             case R.id.loginButton:
@@ -120,14 +119,15 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
 
     @Override
     public void onItemClick(int position) {
+        Upload selectedItem = mUploads.get(position);
+        final String selectedKey = selectedItem.getKey();
+        name = selectedItem.getName();
         Toast.makeText(this, "Normal click at position: " + position, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onWhatEverClick(int position) {
-        Upload selectedItem = mUploads.get(position);
-        final String selectedKey = selectedItem.getKey();
-        Toast.makeText(this, "Whatever click at position: " + selectedItem.getName() + position, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Whatever click at position: "  + position, Toast.LENGTH_SHORT).show();
     }
 
     @Override
