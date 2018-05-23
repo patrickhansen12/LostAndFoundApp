@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -100,16 +101,19 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
                 intent.setData(Uri.parse("tel:" + 31704479));
                 startActivity(Intent.createChooser(intent, ""));
                 break;
-            case R.id.SMSButton:
+            case R.id.smsButton:
                 Uri uri = Uri.parse("smsto:31704479");
                 Intent it = new Intent(Intent.ACTION_SENDTO, uri);
-                it.putExtra("sms_body", "Hej jeg kontakter skolen anngående " + name + " da jeg mener det er mit" );
+                it.putExtra("sms_body", "Hej jeg kontakter skolen angående " + name + " da jeg mener det er mit" );
                 startActivity(it);
                 break;
             case R.id.loginButton:
                 Intent x = new Intent();
                 x.setClass(ImagesActivity.this, StaffActivity.class);
                 startActivity(x);
+                break;
+            case R.id.emailButton:
+             sendEmail();
                 break;
             default:
                 break;
@@ -149,5 +153,29 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
     protected void onDestroy() {
         super.onDestroy();
         mDatabaseRef.removeEventListener(mDBListener);
+    }
+    protected void sendEmail() {
+        Log.i("Send email", "");
+
+        String[] TO = {"someone@gmail.com"};
+        String[] CC = {"xyz@gmail.com"};
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.setType("text/plain");
+
+
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+        emailIntent.putExtra(Intent.EXTRA_CC, CC);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Glemt ting " + name);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Hej jeg kontakter skolen angående det " + name + " da jeg mener det er mit");
+
+        try {
+            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+            //finish();
+            Log.i("Finished sending email...", "");
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(ImagesActivity.this,
+                    "There is no email client installed.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

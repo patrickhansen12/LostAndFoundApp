@@ -8,9 +8,12 @@
 
     <item android:title="SMS"
         app:showAsAction="always"
-        android:id="@+id/SMSButton"/>
+        android:id="@+id/smsButton"/>
 
     <item android:title="Login"
         app:showAsAction="always"
         android:id="@+id/loginButton"/>
+    <item android:title="Email"
+        app:showAsAction="always"
+        android:id="@+id/emailButton"/>
 </menu>
