@@ -1,8 +1,12 @@
 package com.lostandfoundapp.UI;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -79,6 +83,39 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
                 mProgressCircle.setVisibility(View.INVISIBLE);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_images, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int menuId = item.getItemId();
+
+        switch (menuId) {
+            case R.id.phoneButton:
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + 31704479));
+                startActivity(Intent.createChooser(intent, ""));
+                break;
+            case R.id.SMSButton:
+                Uri uri = Uri.parse("smsto:31704479");
+                Intent it = new Intent(Intent.ACTION_SENDTO, uri);
+                it.putExtra("sms_body", "The SMS text");
+                startActivity(it);
+                break;
+            case R.id.loginButton:
+                Intent x = new Intent();
+                x.setClass(ImagesActivity.this, StaffActivity.class);
+                startActivity(x);
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
