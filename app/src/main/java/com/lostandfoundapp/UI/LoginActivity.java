@@ -28,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
 FirebaseDatabase database;
 DatabaseReference users;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,24 +43,18 @@ database = FirebaseDatabase.getInstance();
 users = database.getReference("Users");
         Login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
-                {
-                    if (Username.getText().toString().equals("1") && Password.getText().toString().equals("1"))
-                    {
-                        Intent x = new Intent();
-                        x.setClass(LoginActivity.this, AddActivity.class);
-                        startActivity(x);
-                    }
-                    else
-                    {
-                        FailText.setText("Brugernavnet eller eller kodeordet er forkert");
-                    }
-                }
+            {
+                final User user = new User(Username.getText().toString(),
+                        Password.getText().toString());
+              signIn(Username.getText().toString(),Password.getText().toString());
+            }
         });
 
         Back.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
                 onBackPressed();
+
             }
         });
     signUpBtn.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +78,38 @@ users = database.getReference("Users");
                 }
             });
         }});
-    }}
+    }
+    private void signIn(final String username,final String password) {
+
+        users.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                System.out.println(username);
+                if (dataSnapshot.child(username).exists()){
+                    if(!username.isEmpty()){
+
+                        User login = dataSnapshot.child(username).getValue(User.class);
+                        System.out.println(login);
+        if(login.getM_password().equals(password)) {
+            Toast.makeText(LoginActivity.this, "you are now logged in",Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(LoginActivity.this, "Wrong Password",Toast.LENGTH_SHORT).show();
+        }
+                    }
+        }else{
+                        Toast.makeText(LoginActivity.this, "Username is not Registered", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+}
+
 
 
 
