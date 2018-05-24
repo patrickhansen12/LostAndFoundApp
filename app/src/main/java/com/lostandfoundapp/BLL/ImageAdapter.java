@@ -17,7 +17,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     private Context mContext;
     private List<Images> mImages;
     private OnItemClickListener mListener;
-
+//we assign the context here
     public ImageAdapter(Context context, List<Images> images) {
         mContext = context;
         mImages = images;
@@ -30,6 +30,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     }
 
     @Override
+    //here we want to get the data from our BE.images items into our holder.imageview
     public void onBindViewHolder(ImageViewHolder holder, int position) {
         Images imagesCurrent = mImages.get(position);
         holder.textViewName.setText(imagesCurrent.getName());
@@ -42,6 +43,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     }
 
     @Override
+    //shows as many items as we have in the Images list
     public int getItemCount() {
         return mImages.size();
     }
@@ -61,11 +63,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         }
 
         @Override
+        //makes it possible to click on the pictures
         public void onClick(View v) {
             if (mListener != null) {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
-                    mListener.onItemClick(position);
+                     mListener.onItemClick(position);
+
                 }
             }
         }
