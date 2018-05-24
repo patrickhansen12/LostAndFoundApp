@@ -25,8 +25,8 @@ public class LoginActivity extends AppCompatActivity {
     Button Back, Login, signUpBtn,deleteItemsBtn,addItemsBtn;
     TextView FailText;
     EditText Username, Password;
-FirebaseDatabase database;
-DatabaseReference users;
+    FirebaseDatabase database;
+    DatabaseReference users;
 
 
     @Override
@@ -42,19 +42,19 @@ DatabaseReference users;
         deleteItemsBtn = findViewById(R.id.deleteItemsBtn);
         addItemsBtn = findViewById(R.id.addItemsBtn);
 
+        database = FirebaseDatabase.getInstance();
+        users = database.getReference("Users");
 
-
-database = FirebaseDatabase.getInstance();
-users = database.getReference("Users");
+        //Logs in
         Login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
-                final User user = new User(Username.getText().toString(),
-                        Password.getText().toString());
-              signIn(Username.getText().toString(),Password.getText().toString());
+                new User(Username.getText().toString(), Password.getText().toString());
+              signIn(Username.getText().toString(), Password.getText().toString());
             }
         });
 
+        //Sends you to MainActivity
         Back.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
@@ -65,6 +65,8 @@ users = database.getReference("Users");
 
             }
         });
+
+        //Sends you to ImagesActivity
         deleteItemsBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
@@ -74,6 +76,8 @@ users = database.getReference("Users");
                 startActivity(x);
             }
         });
+
+        //Sends you to StaffActivity
         addItemsBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
@@ -84,7 +88,9 @@ users = database.getReference("Users");
 
             }
         });
-    signUpBtn.setOnClickListener(new View.OnClickListener() {
+
+        //Adds new users based on information written in username and password fields
+        signUpBtn.setOnClickListener(new View.OnClickListener() {
         public void onClick(View v) {
             final User user = new User(Username.getText().toString(),
                     Password.getText().toString());
@@ -106,6 +112,8 @@ users = database.getReference("Users");
             });
         }});
     }
+
+    //Logs the user in if the correct username and password is inputted
     private void signIn(final String username,final String password) {
 
         users.addListenerForSingleValueEvent(new ValueEventListener() {
