@@ -58,7 +58,10 @@ users = database.getReference("Users");
         Back.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
-                onBackPressed();
+                Intent x = new Intent();
+                finish();
+                x.setClass(LoginActivity.this, MainActivity.class);
+                startActivity(x);
 
             }
         });

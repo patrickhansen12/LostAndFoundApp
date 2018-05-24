@@ -20,9 +20,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UI.AddActivity"
-            android:label="AddActivity"></activity>
-        <activity
             android:name=".UI.LoginActivity"
             android:label="LoginActivity"></activity>
 

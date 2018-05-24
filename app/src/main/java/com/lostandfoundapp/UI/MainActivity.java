@@ -104,10 +104,15 @@ public class MainActivity extends AppCompatActivity implements ImageAdapter.OnIt
                 startActivity(Intent.createChooser(intent, ""));
                 break;
             case R.id.smsButton:
-                Uri uri = Uri.parse("smsto:31704479");
-                Intent it = new Intent(Intent.ACTION_SENDTO, uri);
-                it.putExtra("sms_body", "Hej jeg kontakter skolen angående " + name + " da jeg mener det er mit" );
-                startActivity(it);
+                if(name != null){
+                    Uri uri = Uri.parse("smsto:31704479");
+                    Intent it = new Intent(Intent.ACTION_SENDTO, uri);
+                    it.putExtra("sms_body", "Hej jeg kontakter skolen angående " + name + " da jeg mener det er mit"+ " venlig hilsen  " );
+                    startActivity(it);
+                }else{
+                    Toast.makeText(this, "Du skal klikke på det billede du mener er din ting, før at du kan sende en sms til skolen" , Toast.LENGTH_SHORT).show();
+                }
+
                 break;
             case R.id.loginButton:
                 Intent x = new Intent();
@@ -116,7 +121,14 @@ public class MainActivity extends AppCompatActivity implements ImageAdapter.OnIt
                 startActivity(x);
                 break;
             case R.id.emailButton:
-                sendEmail();
+                if(name != null){
+                    sendEmail();
+                }
+
+                else {
+                Toast.makeText(this, "Du skal klikke på det billede du mener er din ting, før at du kan sende en Email til skolen"  , Toast.LENGTH_SHORT).show();
+            }
+
                 break;
             default:
                 break;
@@ -161,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements ImageAdapter.OnIt
         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
         emailIntent.putExtra(Intent.EXTRA_CC, CC);
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Glemt ting " + name);
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Hej jeg kontakter skolen angående det " + name + " da jeg mener det er mit");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Hej jeg kontakter skolen angående " + name + " da jeg mener det er mit venlig hilsen");
 
         try {
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
