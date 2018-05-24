@@ -119,7 +119,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
         System.out.println(selectedItemNumber);
         final String selectedKey = selectedItem.getKey();
         name = selectedItem.getName();
-        Toast.makeText(this, "Normal click at position: " + position, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "du har klikket på " + name, Toast.LENGTH_SHORT).show();
     }
 
 
