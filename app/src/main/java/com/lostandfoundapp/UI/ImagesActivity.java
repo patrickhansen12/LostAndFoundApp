@@ -126,7 +126,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
         return super.onOptionsItemSelected(item);
     }
 
-    //Selects and item when you click on it and notifies you
+    //Selects an item when you click on it and notifies you
     @Override
     public void onItemClick(int position) {
         Images selectedItem = mImages.get(position);
