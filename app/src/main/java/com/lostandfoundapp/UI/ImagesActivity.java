@@ -109,7 +109,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
                 break;
             case R.id.loginButton:
                 Intent x = new Intent();
-                x.setClass(ImagesActivity.this, StaffActivity.class);
+                x.setClass(ImagesActivity.this, LoginActivity.class);
                 startActivity(x);
                 break;
             case R.id.emailButton:

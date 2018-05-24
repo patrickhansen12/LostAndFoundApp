@@ -26,6 +26,12 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"/>
 
+    <Button
+        android:id="@+id/signUpBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button" />
+
     <TextView
         android:id="@+id/failText"
         android:layout_width="wrap_content"
@@ -36,6 +42,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/password2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="textPassword" />
 
         <Button
             android:id="@+id/back"
