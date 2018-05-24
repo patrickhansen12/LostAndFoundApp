@@ -1,16 +1,16 @@
-package com.lostandfoundapp.DAL;
+package com.lostandfoundapp.BE;
 import com.google.firebase.database.Exclude;
 
-public class Upload {
+public class Images {
     private String mName;
     private String mImageUrl;
     private String mKey;
 
-    public Upload() {
+    public Images() {
         //empty constructor needed
     }
 
-    public Upload(String name, String imageUrl) {
+    public Images(String name, String imageUrl) {
         if (name.trim().equals("")) {
             name = "No Name";
         }

@@ -1,15 +1,12 @@
 package com.lostandfoundapp.UI;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -22,7 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.lostandfoundapp.BLL.ImageAdapter;
-import com.lostandfoundapp.DAL.Upload;
+import com.lostandfoundapp.BE.Images;
 import com.lostandfoundapp.R;
 
 import java.util.ArrayList;
@@ -37,7 +34,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
     private DatabaseReference mDatabaseRef;
     private ValueEventListener mDBListener;
     private int selectedItemNumber  = -1;
-    private List<Upload> mUploads;
+    private List<Images> mImages;
 
     public String name;
 
@@ -50,9 +47,9 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mProgressCircle = findViewById(R.id.progress_circle);
 
-        mUploads = new ArrayList<>();
+        mImages = new ArrayList<>();
 
-        mAdapter = new ImageAdapter(ImagesActivity.this, mUploads);
+        mAdapter = new ImageAdapter(ImagesActivity.this, mImages);
 
         mRecyclerView.setAdapter(mAdapter);
 
@@ -66,12 +63,12 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
             //Updates the item list if a new item is added to firestorage
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                mUploads.clear();
+                mImages.clear();
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Upload upload = postSnapshot.getValue(Upload.class);
-                    upload.setKey(postSnapshot.getKey());
-                    mUploads.add(upload);
+                    Images images = postSnapshot.getValue(Images.class);
+                    images.setKey(postSnapshot.getKey());
+                    mImages.add(images);
                 }
 
                 mAdapter.notifyDataSetChanged();
@@ -127,7 +124,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
     //Selects and item when you click on it and notifies you
     @Override
     public void onItemClick(int position) {
-        Upload selectedItem = mUploads.get(position);
+        Images selectedItem = mImages.get(position);
         selectedItemNumber = position;
         System.out.println(selectedItemNumber);
         final String selectedKey = selectedItem.getKey();
@@ -137,7 +134,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
 
     //Deletes Selected item
     public void onDeleteClick(int position) {
-        Upload selectedItem = mUploads.get(position);
+        Images selectedItem = mImages.get(position);
         final String selectedKey = selectedItem.getKey();
 
         StorageReference imageRef = mStorage.getReferenceFromUrl(selectedItem.getImageUrl());

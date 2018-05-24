@@ -13,16 +13,14 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.lostandfoundapp.BLL.ImageAdapter;
-import com.lostandfoundapp.DAL.Upload;
+import com.lostandfoundapp.BE.Images;
 import com.lostandfoundapp.R;
 
 import java.util.ArrayList;
@@ -38,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements ImageAdapter.OnIt
     private DatabaseReference mDatabaseRef;
     private ValueEventListener mDBListener;
 
-    private List<Upload> mUploads;
+    private List<Images> mImages;
     public String name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +48,9 @@ public class MainActivity extends AppCompatActivity implements ImageAdapter.OnIt
 
         mProgressCircle = findViewById(R.id.progress_circle);
 
-        mUploads = new ArrayList<>();
+        mImages = new ArrayList<>();
 
-        mAdapter = new ImageAdapter(MainActivity.this, mUploads);
+        mAdapter = new ImageAdapter(MainActivity.this, mImages);
 
         mRecyclerView.setAdapter(mAdapter);
 
@@ -64,11 +62,11 @@ public class MainActivity extends AppCompatActivity implements ImageAdapter.OnIt
             @Override
 
             public void onDataChange(DataSnapshot dataSnapshot) {
-                mUploads.clear();
+                mImages.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Upload upload = postSnapshot.getValue(Upload.class);
-                    upload.setKey(postSnapshot.getKey());
-                    mUploads.add(upload);
+                    Images images = postSnapshot.getValue(Images.class);
+                    images.setKey(postSnapshot.getKey());
+                    mImages.add(images);
                 }
 
                 mAdapter.notifyDataSetChanged();
@@ -108,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements ImageAdapter.OnIt
                 if(name != null){
                     Uri uri = Uri.parse("smsto:31704479");
                     Intent it = new Intent(Intent.ACTION_SENDTO, uri);
-                    it.putExtra("sms_body", "Hej jeg kontakter skolen angående " + name + " da jeg mener det er min"+ " venlig hilsen  " );
+                    it.putExtra("sms_body", "Hej jeg kontakter skolen angående " + name + ", da jeg mener det er min"+ " venlig hilsen  " );
                     startActivity(it);
                 }else{
                     Toast.makeText(this, "Du skal klikke på det billede du mener er din ting, før at du kan sende en sms til skolen" , Toast.LENGTH_SHORT).show();
@@ -142,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements ImageAdapter.OnIt
     @Override
     //gives the user the name on the item that they clicked on and sets the String name to t
     public void onItemClick(int position) {
-        Upload selectedItem = mUploads.get(position);
+        Images selectedItem = mImages.get(position);
         name = selectedItem.getName();
         Toast.makeText(this, "Du har klikket på: " + name, Toast.LENGTH_SHORT).show();
     }
@@ -164,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements ImageAdapter.OnIt
         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
         emailIntent.putExtra(Intent.EXTRA_CC, CC);
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Glemt ting " + name);
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Hej jeg kontakter skolen angående " + name + " da jeg mener det er min venlig hilsen");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Hej jeg kontakter skolen angående " + name + ", da jeg mener det er min venlig hilsen");
 
         try {
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));

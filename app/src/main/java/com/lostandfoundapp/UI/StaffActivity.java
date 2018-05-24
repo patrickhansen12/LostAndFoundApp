@@ -28,7 +28,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
-import com.lostandfoundapp.DAL.Upload;
+import com.lostandfoundapp.BE.Images;
 import com.lostandfoundapp.R;
 import com.squareup.picasso.Picasso;
 
@@ -89,7 +89,7 @@ public class StaffActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mUploadTask != null && mUploadTask.isInProgress()) {
-                    Toast.makeText(StaffActivity.this, "Upload in progress", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StaffActivity.this, "Images in progress", Toast.LENGTH_SHORT).show();
                 } else {
                     uploadFile();
                 }
@@ -163,11 +163,11 @@ public class StaffActivity extends AppCompatActivity {
                                 }
                             }, 500);
 
-                            Toast.makeText(StaffActivity.this, "Upload successful", Toast.LENGTH_LONG).show();
-                            Upload upload = new Upload(mEditTextFileName.getText().toString().trim(),
+                            Toast.makeText(StaffActivity.this, "Images successful", Toast.LENGTH_LONG).show();
+                            Images images = new Images(mEditTextFileName.getText().toString().trim(),
                                     taskSnapshot.getDownloadUrl().toString());
                             String uploadId = mDatabaseRef.push().getKey();
-                            mDatabaseRef.child(uploadId).setValue(upload);
+                            mDatabaseRef.child(uploadId).setValue(images);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

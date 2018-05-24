@@ -2,28 +2,25 @@ package com.lostandfoundapp.BLL;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.lostandfoundapp.DAL.Upload;
+import com.lostandfoundapp.BE.Images;
 import com.lostandfoundapp.R;
 import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
     private Context mContext;
-    private List<Upload> mUploads;
+    private List<Images> mImages;
     private OnItemClickListener mListener;
 
-    public ImageAdapter(Context context, List<Upload> uploads) {
+    public ImageAdapter(Context context, List<Images> images) {
         mContext = context;
-        mUploads = uploads;
+        mImages = images;
     }
 
     @Override
@@ -34,10 +31,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
     @Override
     public void onBindViewHolder(ImageViewHolder holder, int position) {
-        Upload uploadCurrent = mUploads.get(position);
-        holder.textViewName.setText(uploadCurrent.getName());
+        Images imagesCurrent = mImages.get(position);
+        holder.textViewName.setText(imagesCurrent.getName());
         Picasso.with(mContext)
-                .load(uploadCurrent.getImageUrl())
+                .load(imagesCurrent.getImageUrl())
                 .placeholder(R.mipmap.ic_launcher)
                 .fit()
                 .centerCrop()
@@ -46,7 +43,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
     @Override
     public int getItemCount() {
-        return mUploads.size();
+        return mImages.size();
     }
 
     public class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
