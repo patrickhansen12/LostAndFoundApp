@@ -10,4 +10,8 @@
         android:id="@+id/signOutBtn"
         android:title="Log Ud"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/takePic"
+        android:title="tilføj ting"
+        app:showAsAction="always" />
 </menu>

@@ -116,6 +116,11 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
                 startActivity(x);
                 break;
             default:
+            case R.id.takePic:
+                Intent t = new Intent();
+                finish();
+                t.setClass(ImagesActivity.this, StaffActivity.class);
+                startActivity(t);
                 break;
         }
         return super.onOptionsItemSelected(item);

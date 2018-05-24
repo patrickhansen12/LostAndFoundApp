@@ -12,7 +12,7 @@ public class Images {
 
     public Images(String name, String imageUrl) {
         if (name.trim().equals("")) {
-            name = "No Name";
+            name = "Navn ikke angivet";
         }
 
         mName = name;
