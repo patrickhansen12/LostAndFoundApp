@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements ImageAdapter.OnIt
                 break;
             case R.id.loginButton:
                 Intent x = new Intent();
+                finish();
                 x.setClass(MainActivity.this, LoginActivity.class);
                 startActivity(x);
                 break;

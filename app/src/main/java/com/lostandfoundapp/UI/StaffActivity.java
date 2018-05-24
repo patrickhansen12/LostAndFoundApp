@@ -191,6 +191,7 @@ public class StaffActivity extends AppCompatActivity {
     }
 
     private void openImagesActivity() {
+        finish();
         Intent intent = new Intent(this, ImagesActivity.class);
         startActivity(intent);
     }

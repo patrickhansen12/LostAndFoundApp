@@ -99,10 +99,10 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
         switch (menuId) {
             case R.id.deleteBtn:
                 onDeleteClick(selectedItemNumber);
-                this.setVisible(false);
                 break;
             case R.id.signOutBtn:
                 Intent x = new Intent();
+                finish();
                 x.setClass(ImagesActivity.this, MainActivity.class);
                 startActivity(x);
                 break;

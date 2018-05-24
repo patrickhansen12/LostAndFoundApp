@@ -66,6 +66,7 @@ users = database.getReference("Users");
             public void onClick(View v)
             {
                 Intent x = new Intent();
+                finish();
                 x.setClass(LoginActivity.this, ImagesActivity.class);
                 startActivity(x);
             }
@@ -74,6 +75,7 @@ users = database.getReference("Users");
             public void onClick(View v)
             {
                 Intent x = new Intent();
+                finish();
                 x.setClass(LoginActivity.this, StaffActivity.class);
                 startActivity(x);
 
