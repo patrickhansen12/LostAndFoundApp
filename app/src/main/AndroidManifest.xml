@@ -13,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".UI.MainActivity">
+
         </activity>
         <activity
             android:name=".UI.AddActivity"
@@ -22,14 +23,14 @@
             android:label="LoginActivity"></activity>
 
         <activity android:name=".UI.StaffActivity">
+        </activity>
+
+        <activity android:name=".UI.ImagesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <activity android:name=".UI.ImagesActivity">
         </activity>
     </application>
 

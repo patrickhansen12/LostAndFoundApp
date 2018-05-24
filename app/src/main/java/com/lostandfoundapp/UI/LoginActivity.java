@@ -92,6 +92,7 @@ users = database.getReference("Users");
                         System.out.println(login);
         if(login.getM_password().equals(password)) {
             Toast.makeText(LoginActivity.this, "you are now logged in",Toast.LENGTH_SHORT).show();
+
         }
         else {
             Toast.makeText(LoginActivity.this, "Wrong Password",Toast.LENGTH_SHORT).show();

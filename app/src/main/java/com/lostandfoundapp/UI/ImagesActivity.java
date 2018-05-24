@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -30,13 +31,12 @@ import java.util.List;
 public class ImagesActivity extends AppCompatActivity implements ImageAdapter.OnItemClickListener {
     private RecyclerView mRecyclerView;
     private ImageAdapter mAdapter;
-
     private ProgressBar mProgressCircle;
 
     private FirebaseStorage mStorage;
     private DatabaseReference mDatabaseRef;
     private ValueEventListener mDBListener;
-
+    private int selectedItemNumber;
     private List<Upload> mUploads;
     public String name;
     @Override
@@ -46,8 +46,8 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         mProgressCircle = findViewById(R.id.progress_circle);
+
 
         mUploads = new ArrayList<>();
 
@@ -88,6 +88,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_images, menu);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -96,6 +97,10 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
         int menuId = item.getItemId();
 
         switch (menuId) {
+            case R.id.deleteBtn:
+                onDeleteClick(selectedItemNumber);
+                this.setVisible(false);
+                break;
             case R.id.phoneButton:
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:" + 31704479));
@@ -124,15 +129,14 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
     @Override
     public void onItemClick(int position) {
         Upload selectedItem = mUploads.get(position);
+        selectedItemNumber = position;
+        System.out.println(selectedItemNumber);
         final String selectedKey = selectedItem.getKey();
         name = selectedItem.getName();
         Toast.makeText(this, "Normal click at position: " + position, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onWhatEverClick(int position) {
-        Toast.makeText(this, "Whatever click at position: "  + position, Toast.LENGTH_SHORT).show();
-    }
+
 
     @Override
     public void onDeleteClick(int position) {
