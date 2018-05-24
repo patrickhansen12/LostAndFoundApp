@@ -101,24 +101,10 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
                 onDeleteClick(selectedItemNumber);
                 this.setVisible(false);
                 break;
-            case R.id.phoneButton:
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:" + 31704479));
-                startActivity(Intent.createChooser(intent, ""));
-                break;
-            case R.id.smsButton:
-                Uri uri = Uri.parse("smsto:31704479");
-                Intent it = new Intent(Intent.ACTION_SENDTO, uri);
-                it.putExtra("sms_body", "Hej jeg kontakter skolen angående " + name + " da jeg mener det er mit" );
-                startActivity(it);
-                break;
-            case R.id.loginButton:
+            case R.id.signOutBtn:
                 Intent x = new Intent();
-                x.setClass(ImagesActivity.this, LoginActivity.class);
+                x.setClass(ImagesActivity.this, MainActivity.class);
                 startActivity(x);
-                break;
-            case R.id.emailButton:
-             sendEmail();
                 break;
             default:
                 break;

@@ -22,7 +22,7 @@ import com.lostandfoundapp.R;
  */
 
 public class LoginActivity extends AppCompatActivity {
-    Button Back, Login, signUpBtn;
+    Button Back, Login, signUpBtn,deleteItemsBtn,addItemsBtn;
     TextView FailText;
     EditText Username, Password;
 FirebaseDatabase database;
@@ -39,6 +39,11 @@ DatabaseReference users;
         Username = findViewById(R.id.username);
         Password = findViewById(R.id.password);
         signUpBtn = findViewById(R.id.signUpBtn);
+        deleteItemsBtn = findViewById(R.id.deleteItemsBtn);
+        addItemsBtn = findViewById(R.id.addItemsBtn);
+
+
+
 database = FirebaseDatabase.getInstance();
 users = database.getReference("Users");
         Login.setOnClickListener(new View.OnClickListener() {
@@ -54,6 +59,23 @@ users = database.getReference("Users");
             public void onClick(View v)
             {
                 onBackPressed();
+
+            }
+        });
+        deleteItemsBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v)
+            {
+                Intent x = new Intent();
+                x.setClass(LoginActivity.this, ImagesActivity.class);
+                startActivity(x);
+            }
+        });
+        addItemsBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v)
+            {
+                Intent x = new Intent();
+                x.setClass(LoginActivity.this, StaffActivity.class);
+                startActivity(x);
 
             }
         });
@@ -91,6 +113,10 @@ users = database.getReference("Users");
                         User login = dataSnapshot.child(username).getValue(User.class);
                         System.out.println(login);
         if(login.getM_password().equals(password)) {
+            deleteItemsBtn.setVisibility(View.VISIBLE);
+            addItemsBtn.setVisibility(View.VISIBLE);
+            signUpBtn.setVisibility(View.VISIBLE);
+
             Toast.makeText(LoginActivity.this, "you are now logged in",Toast.LENGTH_SHORT).show();
 
         }

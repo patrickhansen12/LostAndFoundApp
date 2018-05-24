@@ -26,19 +26,41 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"/>
 
-    <Button
-        android:id="@+id/signUpBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        android:visibility="invisible" />
-
     <TextView
         android:id="@+id/failText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
         android:textColor="@color/warningText"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/signUpBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Tilføj Ny Bruger"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/addItemsBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="tilføj glemt ting"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/deleteItemsBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Slet glemt ting"
+            android:visibility="invisible" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

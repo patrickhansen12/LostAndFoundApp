@@ -3,20 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">>
     <item
         android:id="@+id/deleteBtn"
-        android:title="Delete"
-        android:visible="false" />
-    <item android:title="Phone"
-        app:showAsAction="always"
-        android:id="@+id/phoneButton"/>
+        android:title="Slet Billede"
+        app:showAsAction="always" />
 
-    <item android:title="SMS"
-        app:showAsAction="always"
-        android:id="@+id/smsButton"/>
-
-    <item android:title="Login"
-        app:showAsAction="always"
-        android:id="@+id/loginButton"/>
-    <item android:title="Email"
-        app:showAsAction="always"
-        android:id="@+id/emailButton"/>
+    <item
+        android:id="@+id/signOutBtn"
+        android:title="Log Ud"
+        app:showAsAction="always" />
 </menu>
