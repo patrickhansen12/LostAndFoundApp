@@ -36,7 +36,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
     private FirebaseStorage mStorage;
     private DatabaseReference mDatabaseRef;
     private ValueEventListener mDBListener;
-    private int selectedItemNumber;
+    private int selectedItemNumber  = -1;
     private List<Upload> mUploads;
 
     public String name;
@@ -100,10 +100,17 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
         int menuId = item.getItemId();
 
         switch (menuId) {
+
             //Deletes currently Selected Object
             case R.id.deleteBtn:
-                onDeleteClick(selectedItemNumber);
-                break;
+                if(selectedItemNumber == -1) {
+                    Toast.makeText(ImagesActivity.this, "Du skal vælge en ting før at du kan slette den.", Toast.LENGTH_SHORT).show();
+                 break;
+                }else {
+                    onDeleteClick(selectedItemNumber);
+                    selectedItemNumber = -1;
+                    break;
+                }
             //Sends you to MainActivity
             case R.id.signOutBtn:
                 Intent x = new Intent();

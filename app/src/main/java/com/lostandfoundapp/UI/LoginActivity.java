@@ -98,10 +98,12 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.child(user.getM_username()).exists())
-                        Toast.makeText(LoginActivity.this, "that Username is already taken", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Brugernavnet er allerede i brug", Toast.LENGTH_SHORT).show();
                     else {
                         users.child(user.getM_username()).setValue(user);
-                        Toast.makeText(LoginActivity.this, "New user", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this,  Username.getText().toString() + " er nu blevet oprettet" , Toast.LENGTH_SHORT).show();
+                        Username.setText("");
+                        Password.setText("");
                     }
                 }
 
@@ -129,16 +131,19 @@ public class LoginActivity extends AppCompatActivity {
             deleteItemsBtn.setVisibility(View.VISIBLE);
             addItemsBtn.setVisibility(View.VISIBLE);
             signUpBtn.setVisibility(View.VISIBLE);
+            Login.setVisibility(View.GONE);
 
-            Toast.makeText(LoginActivity.this, "you are now logged in",Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this,"Du er nu logget ind som " +  Username.getText().toString() , Toast.LENGTH_SHORT).show();
 
+            Username.setText("");
+            Password.setText("");
         }
         else {
-            Toast.makeText(LoginActivity.this, "Wrong Password",Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "Forkert kodeord",Toast.LENGTH_SHORT).show();
         }
                     }
         }else{
-                        Toast.makeText(LoginActivity.this, "Username is not Registered", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Dette brugernavn er ikke registret", Toast.LENGTH_SHORT).show();
                     }
                 }
 
