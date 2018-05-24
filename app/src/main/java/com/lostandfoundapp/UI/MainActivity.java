@@ -60,14 +60,11 @@ public class MainActivity extends AppCompatActivity implements ImageAdapter.OnIt
 
         mStorage = FirebaseStorage.getInstance();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
-
         mDBListener = mDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
+
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 mUploads.clear();
-
-
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Upload upload = postSnapshot.getValue(Upload.class);
                     upload.setKey(postSnapshot.getKey());
@@ -88,21 +85,25 @@ public class MainActivity extends AppCompatActivity implements ImageAdapter.OnIt
     }
 
     @Override
+    //Creates the OptionsMenu
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
+
     public boolean onOptionsItemSelected(MenuItem item) {
         int menuId = item.getItemId();
 
         switch (menuId) {
+            //Opens the call service if there is more than one available makes you able to choose which one
             case R.id.phoneButton:
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:" + 31704479));
                 startActivity(Intent.createChooser(intent, ""));
                 break;
+                //Opens the phones message app and sets in the predefined text if the user haven't clicked on an item it will tell them that they need to pick one before they can send the school a message
             case R.id.smsButton:
                 if(name != null){
                     Uri uri = Uri.parse("smsto:31704479");
@@ -114,12 +115,14 @@ public class MainActivity extends AppCompatActivity implements ImageAdapter.OnIt
                 }
 
                 break;
+                //opens the LoginActivity
             case R.id.loginButton:
                 Intent x = new Intent();
                 finish();
                 x.setClass(MainActivity.this, LoginActivity.class);
                 startActivity(x);
                 break;
+                //Opens the Email service if the user have clicked on a item otherwise it will tell they need to click on one
             case R.id.emailButton:
                 if(name != null){
                     sendEmail();
@@ -137,33 +140,21 @@ public class MainActivity extends AppCompatActivity implements ImageAdapter.OnIt
     }
 
     @Override
+    //gives the user the name on the item that they clicked on and sets the String name to t
     public void onItemClick(int position) {
         Upload selectedItem = mUploads.get(position);
-        final String selectedKey = selectedItem.getKey();
         name = selectedItem.getName();
         Toast.makeText(this, "Du har klikket på: " + name, Toast.LENGTH_SHORT).show();
     }
 
 
-    @Override
-    public void onDeleteClick(int position) {
-        Upload selectedItem = mUploads.get(position);
-        final String selectedKey = selectedItem.getKey();
 
-        StorageReference imageRef = mStorage.getReferenceFromUrl(selectedItem.getImageUrl());
-        imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                mDatabaseRef.child(selectedKey).removeValue();
-                Toast.makeText(MainActivity.this, "Item deleted", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
+//opens a new intent which allows the user to pick a installed message service from the phone (gmaps,messenger)
     protected void sendEmail() {
         Log.i("Send email", "");
 
-        String[] TO = {"someone@gmail.com"};
+        String[] TO = {"HergårdskolenEsbjerg@mail.com"};
         String[] CC = {"xyz@gmail.com"};
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setData(Uri.parse("mailto:"));
@@ -182,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements ImageAdapter.OnIt
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(MainActivity.this,
                     "There is no email client installed.", Toast.LENGTH_SHORT).show();
+
         }
     }
 

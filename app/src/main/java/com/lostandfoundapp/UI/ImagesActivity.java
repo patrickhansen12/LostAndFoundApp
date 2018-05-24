@@ -63,6 +63,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
 
         mDBListener = mDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
+            //Updates the item list if a new item is added to firestorage
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 mUploads.clear();
@@ -128,7 +129,6 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
     }
 
     //Deletes Selected item
-    @Override
     public void onDeleteClick(int position) {
         Upload selectedItem = mUploads.get(position);
         final String selectedKey = selectedItem.getKey();
@@ -138,7 +138,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
             @Override
             public void onSuccess(Void aVoid) {
                 mDatabaseRef.child(selectedKey).removeValue();
-                Toast.makeText(ImagesActivity.this, "Item deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ImagesActivity.this, name + " er nu blevet slettet", Toast.LENGTH_SHORT).show();
             }
         });
     }
