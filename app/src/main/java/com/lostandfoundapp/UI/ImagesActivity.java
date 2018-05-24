@@ -38,7 +38,9 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
     private ValueEventListener mDBListener;
     private int selectedItemNumber;
     private List<Upload> mUploads;
+
     public String name;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +49,6 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mProgressCircle = findViewById(R.id.progress_circle);
-
 
         mUploads = new ArrayList<>();
 
@@ -85,6 +86,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
         });
     }
 
+    //Creates the menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_images, menu);
@@ -97,9 +99,11 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
         int menuId = item.getItemId();
 
         switch (menuId) {
+            //Deletes currently Selected Object
             case R.id.deleteBtn:
                 onDeleteClick(selectedItemNumber);
                 break;
+            //Sends you to MainActivity
             case R.id.signOutBtn:
                 Intent x = new Intent();
                 finish();
@@ -112,6 +116,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
         return super.onOptionsItemSelected(item);
     }
 
+    //Selects and item when you click on it and notifies you
     @Override
     public void onItemClick(int position) {
         Upload selectedItem = mUploads.get(position);
@@ -122,8 +127,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
         Toast.makeText(this, "du har klikket på " + name, Toast.LENGTH_SHORT).show();
     }
 
-
-
+    //Deletes Selected item
     @Override
     public void onDeleteClick(int position) {
         Upload selectedItem = mUploads.get(position);
@@ -139,33 +143,10 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
         });
     }
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mDatabaseRef.removeEventListener(mDBListener);
-    }
-    protected void sendEmail() {
-        Log.i("Send email", "");
-
-        String[] TO = {"someone@gmail.com"};
-        String[] CC = {"xyz@gmail.com"};
-        Intent emailIntent = new Intent(Intent.ACTION_SEND);
-        emailIntent.setData(Uri.parse("mailto:"));
-        emailIntent.setType("text/plain");
-
-
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
-        emailIntent.putExtra(Intent.EXTRA_CC, CC);
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Glemt ting " + name);
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Hej jeg kontakter skolen angående det " + name + " da jeg mener det er mit");
-
-        try {
-            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-            //finish();
-            Log.i("Finished sending email...", "");
-        } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(ImagesActivity.this,
-                    "There is no email client installed.", Toast.LENGTH_SHORT).show();
-        }
     }
 }
