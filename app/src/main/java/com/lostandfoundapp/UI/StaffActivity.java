@@ -33,7 +33,6 @@ import com.lostandfoundapp.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 
 public class StaffActivity extends AppCompatActivity {
 
@@ -49,7 +48,6 @@ public class StaffActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
 
     private Uri mImageUri;
-    private File mFile;
 
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
@@ -86,6 +84,7 @@ public class StaffActivity extends AppCompatActivity {
             }
         });
 
+        //Checks if there is already something uploading
         mButtonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,11 +104,7 @@ public class StaffActivity extends AppCompatActivity {
         });
     }
 
-    private void openPictureActivity() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-    }
-
+    //Opens the phones pictureGallery and sends a chosen pictures data with it back
     private void openFileChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -117,6 +112,13 @@ public class StaffActivity extends AppCompatActivity {
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
+    //Opens the Camera and sends the pictures data with it back
+    private void openPictureActivity() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+    }
+
+    //Receives the information from a picture and places it ready to upload
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -135,6 +137,7 @@ public class StaffActivity extends AppCompatActivity {
         }
     }
 
+    //Makes the photo into Uri so it can be properly transferred into the database
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -142,12 +145,7 @@ public class StaffActivity extends AppCompatActivity {
         return Uri.parse(path);
     }
 
-    private String getFileExtension(Uri uri) {
-        ContentResolver cR = getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(cR.getType(uri));
-    }
-
+    //
     private void uploadFile() {
         if (mImageUri != null) {
             StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
@@ -190,6 +188,14 @@ public class StaffActivity extends AppCompatActivity {
         }
     }
 
+    //
+    private String getFileExtension(Uri uri) {
+        ContentResolver cR = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cR.getType(uri));
+    }
+
+    //Opens ImagesActivity
     private void openImagesActivity() {
         finish();
         Intent intent = new Intent(this, ImagesActivity.class);
