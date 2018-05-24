@@ -58,4 +58,12 @@
         android:text="Show Uploads"
         android:textSize="16sp" />
 
+    <Button
+        android:id="@+id/button_takepic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:text="Take Picture" />
+
 </RelativeLayout>
