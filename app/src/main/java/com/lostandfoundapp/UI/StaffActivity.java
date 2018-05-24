@@ -145,7 +145,7 @@ public class StaffActivity extends AppCompatActivity {
         return Uri.parse(path);
     }
 
-    //
+    //uploads file to datastorage by using Uri
     private void uploadFile() {
         if (mImageUri != null) {
             StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
@@ -188,7 +188,7 @@ public class StaffActivity extends AppCompatActivity {
         }
     }
 
-    //
+
     private String getFileExtension(Uri uri) {
         ContentResolver cR = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
