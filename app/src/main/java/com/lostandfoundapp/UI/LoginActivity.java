@@ -58,10 +58,6 @@ public class LoginActivity extends AppCompatActivity {
         Back.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
-                Intent x = new Intent();
-                finish();
-                x.setClass(LoginActivity.this, MainActivity.class);
-                startActivity(x);
 
             }
         });
@@ -71,7 +67,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 Intent x = new Intent();
-                finish();
                 x.setClass(LoginActivity.this, ImagesActivity.class);
                 startActivity(x);
             }
@@ -82,7 +77,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 Intent x = new Intent();
-                finish();
                 x.setClass(LoginActivity.this, StaffActivity.class);
                 startActivity(x);
 

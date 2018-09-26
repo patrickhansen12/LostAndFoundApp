@@ -116,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements ImageAdapter.OnIt
                 //opens the LoginActivity
             case R.id.loginButton:
                 Intent x = new Intent();
-                finish();
                 x.setClass(MainActivity.this, LoginActivity.class);
                 startActivity(x);
                 break;
@@ -166,7 +165,6 @@ public class MainActivity extends AppCompatActivity implements ImageAdapter.OnIt
 
         try {
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-            //finish();
             Log.i("Finished sending email...", "");
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(MainActivity.this,

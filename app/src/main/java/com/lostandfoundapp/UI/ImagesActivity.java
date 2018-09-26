@@ -111,14 +111,12 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
             //Sends you to MainActivity
             case R.id.signOutBtn:
                 Intent x = new Intent();
-                finish();
                 x.setClass(ImagesActivity.this, MainActivity.class);
                 startActivity(x);
                 break;
             default:
             case R.id.takePic:
                 Intent t = new Intent();
-                finish();
                 t.setClass(ImagesActivity.this, StaffActivity.class);
                 startActivity(t);
                 break;
