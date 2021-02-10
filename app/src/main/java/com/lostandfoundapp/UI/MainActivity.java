@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements ImageAdapter.OnIt
         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
         emailIntent.putExtra(Intent.EXTRA_CC, CC);
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Glemt ting " + name);
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Hej jeg kontakter skolen angående " + name + ", da jeg mener det er min venlig hilsen");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Hej jeg kontakter skolen angående " + name + ", da jeg mener det er min. Venlig hilsen");
 
         try {
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
